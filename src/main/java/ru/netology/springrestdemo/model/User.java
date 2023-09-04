@@ -25,8 +25,6 @@ public class User {
 
     public User() {}
 
-
-
     @Override
     public int hashCode() {
         return Objects.hash(user, password);
