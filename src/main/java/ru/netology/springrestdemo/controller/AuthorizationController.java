@@ -1,5 +1,8 @@
 package ru.netology.springrestdemo.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 public class AuthorizationController {
+    @Autowired
     AuthorizationService service;
 
     @GetMapping("/authorize")
@@ -24,12 +28,15 @@ public class AuthorizationController {
 
     @ExceptionHandler(InvalidCredentials.class)
     public ResponseEntity<String> icHandler(InvalidCredentials e) {
-        return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+
     @ExceptionHandler(UnauthorizedUser.class)
-    public ResponseEntity<String> uuHandler(UnauthorizedUser e) {
-        return new ResponseEntity<>( HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> unauthorizedUserHandler(UnauthorizedUser e) {
+        final Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
+        logger.error(e.getMessage());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }
 
